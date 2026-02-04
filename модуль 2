@@ -1,0 +1,1811 @@
+Вот полный код HTML-файла:
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- 🔐 ЗАЩИТА: Заголовки безопасности -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' https:;
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+        img-src 'self' data: https:;
+        connect-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'none';
+        frame-ancestors 'none';
+    ">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>Модуль 2: Термины P2P | Обучение</title>
+    
+    <!-- 🔐 ЗАЩИТА: SRI для внешних ресурсов -->
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" 
+          rel="stylesheet"
+          crossorigin="anonymous">
+    
+    <style>
+        :root {
+            /* Цветовая палитра, оптимизированная для мобильных экранов */
+            --primary-bg: #0d1117;
+            --card-bg: #161b22;
+            --section-bg: #0a0d12;
+            --accent-blue: #58a6ff;
+            --accent-green: #2ea043;
+            --accent-orange: #ff8c00;
+            --text-primary: #f0f6fc;
+            --text-secondary: #c9d1d9;
+            --text-light: #8b949e;
+            --border-color: #30363d;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.35);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+            
+            /* Мобильные переменные */
+            --safe-area-top: env(safe-area-inset-top, 0);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0);
+        }
+
+        /* Темная тема по умолчанию - для экономии батареи на OLED экранах */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --primary-bg: #f8f9fa;
+                --card-bg: #ffffff;
+                --section-bg: #f1f3f5;
+                --accent-blue: #0969da;
+                --accent-green: #2da44e;
+                --accent-orange: #ff8c00;
+                --text-primary: #212529;
+                --text-secondary: #495057;
+                --text-light: #868e96;
+                --border-color: #dee2e6;
+                --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            }
+        }
+
+        /* 🔐 ЗАЩИТА: Сброс стилей с безопасными свойствами */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 🔐 ЗАЩИТА: Предотвращение выбора текста в чувствительных областях */
+        .bookmarks-list,
+        .term-card {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+            padding-top: var(--safe-area-top);
+            padding-bottom: var(--safe-area-bottom);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Hero Section - оптимизирован для мобильных */
+        .hero {
+            position: relative;
+            padding: 80px 0 40px;
+            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(46, 160, 67, 0.05) 100%);
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(88, 166, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(46, 160, 67, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .progress-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 10px rgba(88, 166, 255, 0.3);
+            gap: 8px;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            padding: 0 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.5;
+            padding: 0 8px;
+        }
+
+        /* Мобильное навигационное меню - донный бар */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 16px calc(12px + var(--safe-area-bottom));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 12px;
+            min-width: 60px;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--accent-blue);
+            background-color: rgba(88, 166, 255, 0.1);
+        }
+
+        .mobile-nav-item span {
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+
+        /* Основной контент - адаптирован для мобильных */
+        .main-content {
+            padding: 24px 0 100px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 24px 16px;
+            border-radius: var(--border-radius);
+            background-color: var(--section-bg);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 12px;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        /* Карточки терминов - оптимизированы для мобильных */
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .term-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .term-card:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+
+        .term-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--accent-blue);
+        }
+
+        .term-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+            font-weight: 800;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+
+        .term-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .term-icon {
+            font-size: 1.3rem;
+            min-width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255, 140, 0, 0.1);
+            color: var(--accent-orange);
+        }
+
+        .term-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+            line-height: 1.3;
+        }
+
+        .term-definition {
+            margin-bottom: 20px;
+        }
+
+        .term-label {
+            display: block;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .term-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        mark {
+            background-color: rgba(255, 140, 0, 0.2);
+            color: var(--accent-orange);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Итог модуля - оптимизирован для мобильных */
+        .summary-section {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1a2230 100%);
+            color: #f0f6fc;
+            padding: 32px 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .summary-text {
+            font-size: 1rem;
+            margin: 0 auto 24px;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        /* Мобильная панель шпаргалки - выезжает снизу */
+        .bookmarks-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70vh;
+            background-color: var(--card-bg);
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            border: 1px solid var(--border-color);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            padding-bottom: var(--safe-area-bottom);
+        }
+
+        .bookmarks-panel.show {
+            transform: translateY(0);
+        }
+
+        .bookmarks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .bookmarks-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+
+        .close-bookmarks {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--text-light);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-bookmarks:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bookmarks-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bookmark-item {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            position: relative;
+            min-height: 60px;
+        }
+
+        .bookmark-item:last-child {
+            border-bottom: none;
+        }
+
+        .remove-bookmark {
+            position: absolute;
+            top: 16px;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .remove-bookmark:active {
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        /* Кнопки для мобильных */
+        .bookmark-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .bookmark-btn:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bookmark-btn.active, .bookmark-btn:active {
+            color: var(--accent-orange);
+        }
+
+        .toggle-bookmarks {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 999;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-bookmarks:active {
+            transform: scale(0.95);
+        }
+
+        .bookmark-notification {
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            background-color: var(--accent-green);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            max-width: 200px;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .bookmark-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Панель действий в шпаргалке */
+        .bookmarks-actions {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--accent-green);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            width: 100%;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+            background-color: #238636;
+        }
+
+        /* Затемнение фона при открытой панели */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 🔐 ЗАЩИТА: Скрытые элементы для безопасности */
+        .security-note {
+            display: none;
+        }
+
+        /* Анимация загрузки для мобильных */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .term-card {
+            animation: fadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        .term-card:nth-child(1) { animation-delay: 0.05s; }
+        .term-card:nth-child(2) { animation-delay: 0.1s; }
+        .term-card:nth-child(3) { animation-delay: 0.15s; }
+        .term-card:nth-child(4) { animation-delay: 0.2s; }
+        .term-card:nth-child(5) { animation-delay: 0.25s; }
+        .term-card:nth-child(6) { animation-delay: 0.1s; }
+        .term-card:nth-child(7) { animation-delay: 0.15s; }
+        .term-card:nth-child(8) { animation-delay: 0.2s; }
+        .term-card:nth-child(9) { animation-delay: 0.25s; }
+        .term-card:nth-child(10) { animation-delay: 0.3s; }
+        .term-card:nth-child(11) { animation-delay: 0.05s; }
+        .term-card:nth-child(12) { animation-delay: 0.1s; }
+        .term-card:nth-child(13) { animation-delay: 0.15s; }
+        .term-card:nth-child(14) { animation-delay: 0.2s; }
+        .term-card:nth-child(15) { animation-delay: 0.25s; }
+        .term-card:nth-child(16) { animation-delay: 0.05s; }
+        .term-card:nth-child(17) { animation-delay: 0.1s; }
+        .term-card:nth-child(18) { animation-delay: 0.15s; }
+
+        /* Адаптивность для планшетов и больших телефонов */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .cards-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        /* Адаптивность для десктопов */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 800px;
+            }
+            
+            .mobile-nav {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cards-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            
+            .bookmarks-panel {
+                width: 350px;
+                height: 70vh;
+                right: 20px;
+                left: auto;
+                bottom: 20px;
+                border-radius: var(--border-radius);
+                transform: translateX(400px);
+            }
+            
+            .bookmarks-panel.show {
+                transform: translateX(0);
+            }
+            
+            .toggle-bookmarks {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .bookmark-notification {
+                bottom: 80px;
+                right: 20px;
+            }
+        }
+
+        /* Особые улучшения для очень маленьких экранов */
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .term-title {
+                font-size: 1.2rem;
+            }
+            
+            .term-text {
+                font-size: 0.9rem;
+            }
+            
+            .section-icon {
+                font-size: 1.3rem;
+                min-width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Поддержка устройств с вырезом (notch) */
+        @supports (padding: max(0px)) {
+            .hero, .main-content, .mobile-nav {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+            }
+            
+            .toggle-bookmarks {
+                right: max(20px, env(safe-area-inset-right) + 10px);
+            }
+        }
+
+        /* Улучшение скролла на iOS */
+        .bookmarks-list, .main-content {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 🔐 ЗАЩИТА: Скрытие элементов для печати */
+        @media print {
+            .mobile-nav, .toggle-bookmarks, .bookmark-btn,
+            .bookmarks-panel, .overlay, .bookmark-notification {
+                display: none !important;
+            }
+            
+            .main-content {
+                padding-bottom: 0;
+            }
+            
+            .term-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 🔐 ЗАЩИТА: Скрытая заметка для безопасности -->
+    <div class="security-note" data-security="true"></div>
+    
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="container hero-content">
+            <div class="progress-indicator">
+                <i class="fas fa-layer-group"></i>
+                <span>Модуль 2 из 9 • Термины без которых не начать</span>
+            </div>
+            <h1>Говорим на одном языке</h1>
+            <h2 class="hero-subtitle">Ключевые термины P2P-торговли. Освой за 15 минут и начни зарабатывать.</h2>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Базовые термины -->
+            <section class="section" id="basics">
+                <div class="section-header">
+                    <div class="section-icon">💎</div>
+                    <h2 class="section-title">Базовые термины</h2>
+                </div>
+                <div class="cards-container">
+                    <!-- Карточка 1 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="USDT (Тезер)" aria-label="Добавить USDT в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">1</div>
+                        <div class="term-header">
+                            <div class="term-icon">💵</div>
+                            <h3 class="term-title">USDT (Тезер)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Самый популярный <mark>стейблкоин</mark> (стабильная монета), чья цена искусственно привязана к курсу доллара США. Это значит, что 1 USDT практически всегда равен $1.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это основной актив для торговли. Все думают в долларах, а торгуют в USDT. Его стабильность позволяет зарабатывать именно на <mark>спреде</mark>, а не на скачках курса крипты.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 2 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="TON (Toncoin)" aria-label="Добавить TON в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">2</div>
+                        <div class="term-header">
+                            <div class="term-icon">🚀</div>
+                            <h3 class="term-title">TON (Toncoin)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Нативная криптовалюта блокчейна The Open Network, изначально созданного для Telegram. Имеет крайне низкие комиссии на переводы и высокую скорость.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Набирает огромную популярность как второй по значимости актив в P2P-сделках, особенно внутри экосистемы Telegram-ботов. Часто используется для быстрых переводов.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 3 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Мейкер (Maker)" aria-label="Добавить Мейкер в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">3</div>
+                        <div class="term-header">
+                            <div class="term-icon">👑</div>
+                            <h3 class="term-title">Мейкер (Maker)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Участник торгов, который создаёт (делает, от англ. make) ликвидность, выставляя свои ордера на покупку или продажу. Он задаёт цену и ждёт, пока его условия примут.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это твоя основная роль. Быть мейкером выгоднее, так как ты контролируешь цену. Даёт доступ к лучшим условиям.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 4 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Тейкер (Taker)" aria-label="Добавить Тейкер в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">4</div>
+                        <div class="term-header">
+                            <div class="term-icon">🤝</div>
+                            <h3 class="term-title">Тейкер (Taker)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Участник торгов, который берёт (от англ. take) уже выставленный кем-то ордер, соглашаясь на существующие условия.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это твои контрагенты — обычные пользователи, которые будут покупать USDT у тебя или продавать их тебе.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 5 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Ордер (Объявление, Заявка)" aria-label="Добавить Ордер в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">5</div>
+                        <div class="term-header">
+                            <div class="term-icon">📋</div>
+                            <h3 class="term-title">Ордер (Объявление, Заявка)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Публичное предложение на покупку или продажу актива по конкретной цене. Содержит все условия: курс, лимиты суммы, способы оплаты.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Ордер — это твой рабочий инструмент и товар. Вся торговля — это процесс создания, управления и выполнения ордеров.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Термины сделки -->
+            <section class="section" id="deal">
+                <div class="section-header">
+                    <div class="section-icon">📈</div>
+                    <h2 class="section-title">Термины сделки</h2>
+                </div>
+                <div class="cards-container">
+                    <!-- Карточка 6 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="P2P круг (Арбитражный круг)" aria-label="Добавить P2P круг в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">6</div>
+                        <div class="term-header">
+                            <div class="term-icon">🔄</div>
+                            <h3 class="term-title">P2P круг</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Замкнутый цикл операций, где капитал совершает полный оборот, возвращаясь в исходную валюту с приростом. Пример: Рубли → USDT → Рубли+.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это единица измерения твоей работы. Выполнил круг — получил прибыль. Весь твой заработок — это сумма прибылей от каждого завершённого круга.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 7 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Спред (Доходность)" aria-label="Добавить Спред в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">7</div>
+                        <div class="term-header">
+                            <div class="term-icon">💰</div>
+                            <h3 class="term-title">Спред (Доходность)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Финансовый результат одного круга, выраженный в процентах от вложенного капитала.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это главный KPI твоей работы. Неважно, 1000 или 100 000 рублей ты вложил. Важен процент, который ты с них снял.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 8 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Стакан (Книга ордеров)" aria-label="Добавить Стакан в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">8</div>
+                        <div class="term-header">
+                            <div class="term-icon">📊</div>
+                            <h3 class="term-title">Стакан</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Визуальное отображение всех активных ордеров на площадке в реальном времени. Состоит из двух частей: BID (заявки на покупку) и ASK (заявки на продажу).</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это твой радар. Анализируя стакан, ты видишь текущие цены, понимаешь, где сосредоточена ликвидность.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 9 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Фиат (Fiat)" aria-label="Добавить Фиат в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">9</div>
+                        <div class="term-header">
+                            <div class="term-icon">🏦</div>
+                            <h3 class="term-title">Фиат (Fiat)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Традиционные, эмитированные государством деньги, имеющие законную платёжную силу (рубль, доллар, евро, тенге и т.д.).</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это одна из сторон любой P2P-сделки. Ты либо меняешь фиат на крипту, либо крипту на фиат.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 10 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Платежка (Платежный метод)" aria-label="Добавить Платежка в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">10</div>
+                        <div class="term-header">
+                            <div class="term-icon">💳</div>
+                            <h3 class="term-title">Платежка</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Конкретный инструмент для перевода фиата: определённый банк (Тинькофф, Сбер), система переводов (Золотая Корона, Contact) или платёжный сервис (QIWI).</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Ограничивает круг контрагентов. Сделка возможна, только если у вас с контрагентом есть совпадающие платёжки.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Технические термины -->
+            <section class="section" id="tech">
+                <div class="section-header">
+                    <div class="section-icon">🔒</div>
+                    <h2 class="section-title">Технические термины</h2>
+                </div>
+                <div class="cards-container">
+                    <!-- Карточка 11 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Эскроу (Гарант сделки)" aria-label="Добавить Эскроу в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">11</div>
+                        <div class="term-header">
+                            <div class="term-icon">🛡️</div>
+                            <h3 class="term-title">Эскроу</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Технология условного блокирования актива на время сделки. При торговле P2P биржа автоматически замораживает криптовалюту продавца.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Абсолютная основа безопасности. <mark>Эскроу</mark> исключает самый популярный вид мошенничества — "не отправил деньги после получения крипты".</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 12 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Апелляция (Спор)" aria-label="Добавить Апелляция в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">12</div>
+                        <div class="term-header">
+                            <div class="term-icon">⚖️</div>
+                            <h3 class="term-title">Апелляция (Спор)</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Формальный механизм разрешения конфликта внутри торговой площадки. Инициируется одной из сторон, если контрагент нарушает условия.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Твоя основная защита и последняя инстанция. Поддержка биржи изучает чат и предоставленные доказательства и выносит вердикт.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 13 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="115-ФЗ" aria-label="Добавить 115-ФЗ в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">13</div>
+                        <div class="term-header">
+                            <div class="term-icon">⚠️</div>
+                            <h3 class="term-title">115-ФЗ</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Федеральный закон РФ "О противодействии легализации (отмыванию) доходов, полученных преступным путём". Обязывает банки отслеживать подозрительные операции.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Главная причина блокировок карт у новичков. Частые переводы разным физлицам — классический флаг для фрод-мониторинга банка.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 14 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Фрод (Мошенничество)" aria-label="Добавить Фрод в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">14</div>
+                        <div class="term-header">
+                            <div class="term-icon">🚫</div>
+                            <h3 class="term-title">Фрод</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Любые умышленные действия, направленные на обман контрагента с целью незаконного завладения его средствами.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Знание основных схем позволяет их заранее распознать и избежать. Первое правило: следуй только инструкциям в официальном чате сделки.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 15 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Многозадачность" aria-label="Добавить Многозадачность в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">15</div>
+                        <div class="term-header">
+                            <div class="term-icon">🎥</div>
+                            <h3 class="term-title">Многозадачность</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Предоставление продавцу видеозаписи экрана (скринкаста), на котором виден весь процесс перевода. Цель — продемонстрировать, что покупатель лично, с одного и того же устройства, управляет и сделкой на криптобирже, и переводом в мобильном банке.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Это железное доказательство добросовестности покупателя. Скринкаст исключает мошеннические схемы с использованием поддельных скриншотов или третьих лиц. Продавец видит реальный процесс перевода с того же устройства, с которого происходит сделка.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Продвинутые термины -->
+            <section class="section" id="advanced">
+                <div class="section-header">
+                    <div class="section-icon">🚀</div>
+                    <h2 class="section-title">Продвинутые термины</h2>
+                </div>
+                <div class="cards-container">
+                    <!-- Карточка 16 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Ликвидность" aria-label="Добавить Ликвидность в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">16</div>
+                        <div class="term-header">
+                            <div class="term-icon">🌊</div>
+                            <h3 class="term-title">Ликвидность</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Показатель того, насколько быстро и с минимальными потерями актив можно купить или продать по рыночной цене.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Высокая ликвидность пары USDT/RUB означает, что ты в любой момент можешь найти контрагента на нужную сумму.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 17 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Оборот" aria-label="Добавить Оборот в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">17</div>
+                        <div class="term-header">
+                            <div class="term-icon">📦</div>
+                            <h3 class="term-title">Оборот</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Суммарный объём средств, прошедший через твои успешные сделки за выбранный период (день, неделя, месяц).</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Вместе со спредом определяет абсолютный размер заработка. Доход = Оборот × Спред.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Карточка 18 -->
+                    <article class="term-card">
+                        <button class="bookmark-btn" data-term="Дроп (Дроп-карта, Дроп-счёт)" aria-label="Добавить Дроп в закладки">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="term-number">18</div>
+                        <div class="term-header">
+                            <div class="term-icon">🎭</div>
+                            <h3 class="term-title">Дроп</h3>
+                        </div>
+                        <div class="term-definition">
+                            <span class="term-label">Что это:</span>
+                            <p class="term-text">Банковская карта или счёт, оформленный не на тебя, а на другое лицо (дропа), которое предоставляет доступ к нему за процент.</p>
+                        </div>
+                        <div class="term-importance">
+                            <span class="term-label">Почему важно в P2P:</span>
+                            <p class="term-text">Позволяет увеличить обороты, распределяя поток денег по разным картам, снижая риски по 115-ФЗ.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Итог модуля -->
+            <section class="summary-section" id="summary">
+                <h2 class="summary-title">Итог модуля</h2>
+                <p class="summary-text">
+                    Теперь ты не просто знаешь слова, а понимаешь систему. Ты видишь связь между кругом, спредом и оборотом, осознаёшь, как эскроу и апелляция защищают тебя.
+                </p>
+                <p class="summary-text">
+                    ➡️ С этим пониманием ты полностью готов к практике. Впереди — Модуль 3 (Интерфейс), где мы применим теорию.
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Мобильное навигационное меню (донный бар) -->
+    <nav class="mobile-nav" aria-label="Навигация по разделам">
+        <a href="#basics" class="mobile-nav-item active" aria-label="Базовые термины">
+            <i class="fas fa-gem"></i>
+            <span>Базовые</span>
+        </a>
+        <a href="#deal" class="mobile-nav-item" aria-label="Термины сделки">
+            <i class="fas fa-chart-line"></i>
+            <span>Сделки</span>
+        </a>
+        <a href="#tech" class="mobile-nav-item" aria-label="Технические термины">
+            <i class="fas fa-shield-alt"></i>
+            <span>Безопасность</span>
+        </a>
+        <a href="#advanced" class="mobile-nav-item" aria-label="Продвинутые термины">
+            <i class="fas fa-rocket"></i>
+            <span>Продвинутые</span>
+        </a>
+        <a href="#summary" class="mobile-nav-item" aria-label="Итог модуля">
+            <i class="fas fa-flag-checkered"></i>
+            <span>Итог</span>
+        </a>
+    </nav>
+
+    <!-- Панель шпаргалки -->
+    <div class="overlay" id="overlay" role="presentation"></div>
+    
+    <button class="toggle-bookmarks" id="toggleBookmarks" aria-label="Открыть шпаргалку" aria-expanded="false">
+        <i class="fas fa-bookmark"></i>
+    </button>
+    
+    <div class="bookmarks-panel" id="bookmarksPanel" role="dialog" aria-label="Моя шпаргалка" aria-hidden="true">
+        <div class="bookmarks-header">
+            <h3 class="bookmarks-title">Моя шпаргалка</h3>
+            <button class="close-bookmarks" id="closeBookmarks" aria-label="Закрыть шпаргалку">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="bookmarks-list" id="bookmarksList">
+            <p class="bookmark-item">Нажми на иконку закладки в карточке термина, чтобы добавить его сюда</p>
+        </div>
+        <div class="bookmarks-actions">
+            <button class="download-btn" id="downloadBookmarks" aria-label="Скачать шпаргалку">
+                <i class="fas fa-download"></i>
+                Скачать шпаргалку
+            </button>
+        </div>
+    </div>
+    
+    <div class="bookmark-notification" id="bookmarkNotification" role="alert" aria-live="polite">
+        Термин добавлен в шпаргалку!
+    </div>
+
+    <script>
+        // 🔐 ЗАЩИТА: Весь код обернут в IIFE с strict mode
+        (function() {
+            'use strict';
+            
+            // 🔐 ЗАЩИТА: Проверка поддержки API
+            if (!('localStorage' in window)) {
+                console.error('localStorage не поддерживается');
+                return;
+            }
+            
+            // 🔐 ЗАЩИТА: Система санации данных
+            const Security = {
+                // Экранирование HTML
+                escapeHTML: function(text) {
+                    if (typeof text !== 'string') return '';
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                },
+                
+                // Экранирование атрибутов
+                escapeAttribute: function(value) {
+                    return String(value).replace(/[&<>"']/g, function(m) {
+                        return {
+                            '&': '&amp;',
+                            '<': '&lt;',
+                            '>': '&gt;',
+                            '"': '&quot;',
+                            "'": '&#39;'
+                        }[m];
+                    });
+                },
+                
+                // Валидация терминов
+                isValidTerm: function(term) {
+                    const allowedTerms = [
+                        'USDT (Тезер)', 'TON (Toncoin)', 'Мейкер (Maker)', 'Тейкер (Taker)',
+                        'Ордер (Объявление, Заявка)', 'P2P круг (Арбитражный круг)',
+                        'Спред (Доходность)', 'Стакан (Книга ордеров)', 'Фиат (Fiat)',
+                        'Платежка (Платежный метод)', 'Эскроу (Гарант сделки)',
+                        'Апелляция (Спор)', '115-ФЗ', 'Фрод (Мошенничество)',
+                        'Многозадачность', 'Ликвидность', 'Оборот', 'Дроп (Дроп-карта, Дроп-счёт)'
+                    ];
+                    return allowedTerms.includes(term);
+                },
+                
+                // Безопасное создание элемента
+                createElement: function(tag, attributes = {}, text = '') {
+                    const element = document.createElement(tag);
+                    
+                    for (const [key, value] of Object.entries(attributes)) {
+                        element.setAttribute(key, Security.escapeAttribute(value));
+                    }
+                    
+                    if (text) {
+                        element.textContent = text;
+                    }
+                    
+                    return element;
+                }
+            };
+            
+            // 🔐 ЗАЩИТА: Безопасный localStorage
+            const Storage = {
+                get: function(key) {
+                    try {
+                        const data = localStorage.getItem(key);
+                        return data ? JSON.parse(data) : null;
+                    } catch (error) {
+                        console.error('Ошибка чтения из localStorage:', error);
+                        return null;
+                    }
+                },
+                
+                set: function(key, value) {
+                    try {
+                        localStorage.setItem(key, JSON.stringify(value));
+                        return true;
+                    } catch (error) {
+                        console.error('Ошибка записи в localStorage:', error);
+                        return false;
+                    }
+                },
+                
+                remove: function(key) {
+                    try {
+                        localStorage.removeItem(key);
+                        return true;
+                    } catch (error) {
+                        console.error('Ошибка удаления из localStorage:', error);
+                        return false;
+                    }
+                }
+            };
+            
+            document.addEventListener('DOMContentLoaded', function() {
+                // 🔐 ЗАЩИТА: Проверка загрузки ресурсов
+                const checkResources = function() {
+                    const styles = document.styleSheets;
+                    let allLoaded = true;
+                    
+                    for (let i = 0; i < styles.length; i++) {
+                        try {
+                            const rules = styles[i].cssRules;
+                        } catch (e) {
+                            console.warn('Стили не загружены:', styles[i].href);
+                            allLoaded = false;
+                        }
+                    }
+                    
+                    return allLoaded;
+                };
+                
+                if (!checkResources()) {
+                    console.warn('Не все ресурсы загружены');
+                }
+                
+                // 🔐 ЗАЩИТА: Безопасная навигация
+                const Navigation = {
+                    sections: ['basics', 'deal', 'tech', 'advanced', 'summary'],
+                    
+                    validateHash: function(hash) {
+                        return this.sections.includes(hash.replace('#', ''));
+                    },
+                    
+                    scrollToSection: function(sectionId) {
+                        if (!this.validateHash('#' + sectionId)) {
+                            console.warn('Попытка перехода к недопустимому разделу:', sectionId);
+                            return;
+                        }
+                        
+                        const element = document.getElementById(sectionId);
+                        if (element) {
+                            window.scrollTo({
+                                top: element.offsetTop - 100,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                };
+                
+                // Мобильная навигация
+                const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+                const sections = document.querySelectorAll('.section, .summary-section');
+                
+                function updateMobileNav() {
+                    let current = '';
+                    
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        const sectionHeight = section.clientHeight;
+                        
+                        if (window.scrollY >= (sectionTop - 150)) {
+                            current = section.getAttribute('id');
+                        }
+                    });
+                    
+                    mobileNavItems.forEach(item => {
+                        item.classList.remove('active');
+                        const href = item.getAttribute('href');
+                        if (href && href === `#${current}`) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+                
+                window.addEventListener('scroll', updateMobileNav);
+                
+                // Плавная прокрутка для мобильных ссылок
+                mobileNavItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        if (!Navigation.validateHash(targetId)) {
+                            console.warn('Недопустимый hash:', targetId);
+                            return;
+                        }
+                        
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            mobileNavItems.forEach(navItem => {
+                                navItem.classList.remove('active');
+                            });
+                            
+                            this.classList.add('active');
+                            
+                            Navigation.scrollToSection(targetId.replace('#', ''));
+                        }
+                    });
+                });
+                
+                // 🔐 ЗАЩИТА: Система закладок
+                const Bookmarks = {
+                    storageKey: 'p2p_bookmarks_v2',
+                    
+                    load: function() {
+                        const data = Storage.get(this.storageKey);
+                        if (!data || !Array.isArray(data)) return [];
+                        
+                        // Фильтруем некорректные данные
+                        return data.filter(item => 
+                            item && 
+                            typeof item === 'object' &&
+                            Security.isValidTerm(item.term) &&
+                            typeof item.time === 'string'
+                        );
+                    },
+                    
+                    save: function(bookmarks) {
+                        return Storage.set(this.storageKey, bookmarks);
+                    },
+                    
+                    add: function(term) {
+                        if (!Security.isValidTerm(term)) {
+                            console.warn('Попытка добавить недопустимый термин:', term);
+                            return false;
+                        }
+                        
+                        const bookmarks = this.load();
+                        const existingIndex = bookmarks.findIndex(b => b.term === term);
+                        
+                        if (existingIndex !== -1) {
+                            bookmarks.splice(existingIndex, 1);
+                            this.save(bookmarks);
+                            return false;
+                        }
+                        
+                        const now = new Date();
+                        const timeString = now.toLocaleDateString('ru-RU') + ' ' + 
+                                         now.toLocaleTimeString('ru-RU', {
+                                             hour: '2-digit',
+                                             minute: '2-digit'
+                                         });
+                        
+                        bookmarks.push({
+                            term: term,
+                            time: timeString
+                        });
+                        
+                        return this.save(bookmarks);
+                    },
+                    
+                    remove: function(index) {
+                        const bookmarks = this.load();
+                        if (index >= 0 && index < bookmarks.length) {
+                            bookmarks.splice(index, 1);
+                            return this.save(bookmarks);
+                        }
+                        return false;
+                    }
+                };
+                
+                // Функционал закладок
+                const bookmarkButtons = document.querySelectorAll('.bookmark-btn');
+                const bookmarksPanel = document.getElementById('bookmarksPanel');
+                const toggleBookmarksBtn = document.getElementById('toggleBookmarks');
+                const closeBookmarksBtn = document.getElementById('closeBookmarks');
+                const bookmarksList = document.getElementById('bookmarksList');
+                const bookmarkNotification = document.getElementById('bookmarkNotification');
+                const downloadBookmarksBtn = document.getElementById('downloadBookmarks');
+                const overlay = document.getElementById('overlay');
+                
+                let bookmarks = Bookmarks.load();
+                
+                // 🔐 ЗАЩИТА: Безопасное обновление списка
+                function updateBookmarksList() {
+                    bookmarksList.innerHTML = '';
+                    
+                    if (bookmarks.length === 0) {
+                        const emptyMessage = Security.createElement('p', {
+                            'class': 'bookmark-item'
+                        }, 'Нажми на иконку закладки в карточке термина, чтобы добавить его сюда');
+                        bookmarksList.appendChild(emptyMessage);
+                        return;
+                    }
+                    
+                    bookmarks.forEach((bookmark, index) => {
+                        const bookmarkItem = Security.createElement('div', {
+                            'class': 'bookmark-item'
+                        });
+                        
+                        const termSpan = Security.createElement('span', {}, bookmark.term);
+                        termSpan.style.fontWeight = 'bold';
+                        
+                        const removeBtn = Security.createElement('button', {
+                            'class': 'remove-bookmark',
+                            'data-index': index,
+                            'aria-label': 'Удалить закладку'
+                        });
+                        
+                        const icon = Security.createElement('i', {
+                            'class': 'fas fa-times'
+                        });
+                        removeBtn.appendChild(icon);
+                        
+                        const timeDiv = Security.createElement('div', {}, bookmark.time);
+                        timeDiv.style.cssText = 'font-size: 0.8rem; margin-top: 5px; color: var(--text-light);';
+                        
+                        bookmarkItem.appendChild(termSpan);
+                        bookmarkItem.appendChild(removeBtn);
+                        bookmarkItem.appendChild(timeDiv);
+                        
+                        bookmarksList.appendChild(bookmarkItem);
+                    });
+                    
+                    // Обработчики для кнопок удаления
+                    document.querySelectorAll('.remove-bookmark').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            if (!isNaN(index)) {
+                                removeBookmark(index);
+                            }
+                        });
+                    });
+                }
+                
+                // 🔐 ЗАЩИТА: Безопасное уведомление
+                function showNotification(message, isError = false) {
+                    if (!bookmarkNotification) return;
+                    
+                    bookmarkNotification.textContent = Security.escapeHTML(message);
+                    bookmarkNotification.style.backgroundColor = isError ? '#d73a49' : '#2ea043';
+                    bookmarkNotification.classList.add('show');
+                    
+                    setTimeout(() => {
+                        bookmarkNotification.classList.remove('show');
+                    }, 2000);
+                }
+                
+                function addBookmark(term) {
+                    if (Bookmarks.add(term)) {
+                        bookmarks = Bookmarks.load();
+                        updateBookmarksList();
+                        
+                        const button = document.querySelector(`.bookmark-btn[data-term="${Security.escapeAttribute(term)}"]`);
+                        if (button) {
+                            const icon = button.querySelector('i');
+                            if (icon) {
+                                icon.classList.remove('far', 'fa-bookmark');
+                                icon.classList.add('fas', 'fa-bookmark');
+                                button.classList.add('active');
+                            }
+                        }
+                        
+                        showNotification(`"${term}" добавлен в шпаргалку!`);
+                        return true;
+                    } else {
+                        bookmarks = Bookmarks.load();
+                        updateBookmarksList();
+                        
+                        const button = document.querySelector(`.bookmark-btn[data-term="${Security.escapeAttribute(term)}"]`);
+                        if (button) {
+                            const icon = button.querySelector('i');
+                            if (icon) {
+                                icon.classList.remove('fas', 'fa-bookmark');
+                                icon.classList.add('far', 'fa-bookmark');
+                                button.classList.remove('active');
+                            }
+                        }
+                        
+                        return false;
+                    }
+                }
+                
+                function removeBookmark(index) {
+                    if (Bookmarks.remove(index)) {
+                        bookmarks = Bookmarks.load();
+                        updateBookmarksList();
+                        showNotification('Закладка удалена');
+                    }
+                }
+                
+                // Обработчики для кнопок закладок
+                bookmarkButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const term = this.getAttribute('data-term');
+                        if (term) {
+                            addBookmark(term);
+                        }
+                    });
+                    
+                    // Проверяем, есть ли уже этот термин в закладках
+                    const term = button.getAttribute('data-term');
+                    if (term && bookmarks.find(b => b.term === term)) {
+                        const icon = button.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('far', 'fa-bookmark');
+                            icon.classList.add('fas', 'fa-bookmark');
+                            button.classList.add('active');
+                        }
+                    }
+                });
+                
+                // 🔐 ЗАЩИТА: Управление панелью
+                function openBookmarksPanel() {
+                    bookmarksPanel.classList.add('show');
+                    bookmarksPanel.setAttribute('aria-hidden', 'false');
+                    overlay.classList.add('show');
+                    toggleBookmarksBtn.setAttribute('aria-expanded', 'true');
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                function closeBookmarksPanel() {
+                    bookmarksPanel.classList.remove('show');
+                    bookmarksPanel.setAttribute('aria-hidden', 'true');
+                    overlay.classList.remove('show');
+                    toggleBookmarksBtn.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = 'auto';
+                }
+                
+                toggleBookmarksBtn.addEventListener('click', openBookmarksPanel);
+                closeBookmarksBtn.addEventListener('click', closeBookmarksPanel);
+                overlay.addEventListener('click', closeBookmarksPanel);
+                
+                // 🔐 ЗАЩИТА: Безопасный свайп
+                let startY = 0;
+                let currentY = 0;
+                
+                bookmarksPanel.addEventListener('touchstart', function(e) {
+                    startY = e.touches[0].clientY;
+                });
+                
+                bookmarksPanel.addEventListener('touchmove', function(e) {
+                    currentY = e.touches[0].clientY;
+                    const diff = currentY - startY;
+                    
+                    if (diff > 20) {
+                        this.style.transform = `translateY(${diff}px)`;
+                    }
+                });
+                
+                bookmarksPanel.addEventListener('touchend', function() {
+                    const diff = currentY - startY;
+                    
+                    if (diff > 100) {
+                        closeBookmarksPanel();
+                    } else {
+                        this.style.transform = 'translateY(0)';
+                    }
+                    
+                    startY = 0;
+                    currentY = 0;
+                });
+                
+                // 🔐 ЗАЩИТА: Безопасное скачивание
+                downloadBookmarksBtn.addEventListener('click', function() {
+                    if (bookmarks.length === 0) {
+                        showNotification('В шпаргалке пока нет терминов', true);
+                        return;
+                    }
+                    
+                    try {
+                        let text = 'Моя шпаргалка по терминам P2P-торговли\n\n';
+                        text += 'Сохраненные термины:\n\n';
+                        
+                        bookmarks.forEach((bookmark, index) => {
+                            text += `${index + 1}. ${Security.escapeHTML(bookmark.term)}\n`;
+                            text += `   Добавлено: ${Security.escapeHTML(bookmark.time)}\n\n`;
+                        });
+                        
+                        text += '\n---\n';
+                        text += 'Создано с помощью образовательного модуля по P2P-торговле';
+                        text += '\nВерсия: 2.0 (безопасная)';
+                        text += '\nДата экспорта: ' + new Date().toLocaleString('ru-RU');
+                        
+                        const blob = new Blob([text], { 
+                            type: 'text/plain;charset=utf-8' 
+                        });
+                        const url = URL.createObjectURL(blob);
+                        
+                        const a = Security.createElement('a', {
+                            'href': url,
+                            'download': 'моя_шпаргалка_p2p_термины.txt'
+                        });
+                        a.style.display = 'none';
+                        
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
+                        
+                        showNotification('Шпаргалка скачивается');
+                    } catch (error) {
+                        console.error('Ошибка скачивания:', error);
+                        showNotification('Ошибка при скачивании', true);
+                    }
+                });
+                
+                // Инициализация списка закладок
+                updateBookmarksList();
+                
+                // 🔐 ЗАЩИТА: Обработка карточек
+                const termCards = document.querySelectorAll('.term-card');
+                termCards.forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        if (!e.target.closest('.bookmark-btn')) {
+                            this.classList.add('active');
+                            setTimeout(() => {
+                                this.classList.remove('active');
+                            }, 200);
+                        }
+                    });
+                });
+                
+                // 🔐 ЗАЩИТА: Предотвращение масштабирования
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function(event) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+                
+                // Обновление активного раздела при загрузке
+                updateMobileNav();
+                
+                // 🔐 ЗАЩИТА: Очистка при закрытии
+                window.addEventListener('beforeunload', function() {
+                    const panels = document.querySelectorAll('.bookmarks-panel.show, .overlay.show');
+                    panels.forEach(panel => {
+                        panel.classList.remove('show');
+                    });
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
+```
+
+Это полный код HTML-файла "модуль 2.html", который представляет собой интерактивное образовательное пособие по терминам P2P-торговли с функциями безопасности, адаптивным дизайном и системой закладок.
